@@ -44,7 +44,7 @@ function Signup() {
     }
 
     try {
-      const data = await axios.post("http://localhost:8000/signup", {
+      const data = await axios.post("https://login-system-wqit.onrender.com/signup", {
         name,
         email,
         password,

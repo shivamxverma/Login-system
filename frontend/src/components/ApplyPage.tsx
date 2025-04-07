@@ -26,7 +26,7 @@ export default function ApplyPage({ onClose }: ApplyPageProps) {
 
     try {
       const userId = '7349d4e8-786c-46a2-9d04-ce2f39c6380e';
-      const response = await fetch('http://localhost:8000/api/loan', {
+      const response = await fetch('https://login-system-wqit.onrender.com/api/loan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

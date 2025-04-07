@@ -34,7 +34,7 @@ const VerifierDashboard: React.FC<VerifierDashboardProps> = () => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:8000/api/loan', {
+        const response = await fetch('https://login-system-wqit.onrender.com/api/loan', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const VerifierDashboard: React.FC<VerifierDashboardProps> = () => {
       );
       setSelectedLoanId(null);
 
-      const response = await fetch(`http://localhost:8000/api/loan/verify/${loanId}`, {
+      const response = await fetch(`https://login-system-wqit.onrender.com/api/loan/verify/${loanId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ const VerifierDashboard: React.FC<VerifierDashboardProps> = () => {
       setLoans((prevLoans) => prevLoans.filter((loan) => loan.id !== loanId));
       setSelectedLoanId(null);
 
-      const response = await fetch(`http://localhost:8000/api/loan/reject/${loanId}`, {
+      const response = await fetch(`https://login-system-wqit.onrender.com/api/loan/reject/${loanId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

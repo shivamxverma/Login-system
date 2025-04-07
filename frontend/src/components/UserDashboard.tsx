@@ -24,7 +24,7 @@ const UserDashboard = () => {
         // if (!userId) {
         //   throw new Error('User ID not found in cookie');
         // }
-        const response = await fetch("http://localhost:8000/api/loan", {
+        const response = await fetch("https://login-system-wqit.onrender.com/api/loan", {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

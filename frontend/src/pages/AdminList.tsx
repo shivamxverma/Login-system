@@ -18,7 +18,7 @@ const AdminList = () => {
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
-        const response = await fetch('http://localhost:8000/users/admins', {
+        const response = await fetch('https://login-system-wqit.onrender.com/users/admins', {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -43,7 +43,7 @@ const AdminList = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/users/${adminId}`, {
+      const response = await fetch(`https://login-system-wqit.onrender.com/users/${adminId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

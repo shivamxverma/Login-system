@@ -19,7 +19,7 @@ app.use(cookieParser());
 
 // ✅ CORS FIX
 app.use(cors({
-  origin: "http://localhost:5173",  // your frontend URL
+  origin: "https://login-system-eosin.vercel.app",  // your frontend URL
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true, // <== very important

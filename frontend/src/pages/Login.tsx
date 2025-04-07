@@ -23,7 +23,7 @@ const Login: React.FC = () => {
     setError(null); // Reset error state
 
     try {
-      const response = await fetch('http://localhost:8000/login', {
+      const response = await fetch('https://login-system-wqit.onrender.com/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

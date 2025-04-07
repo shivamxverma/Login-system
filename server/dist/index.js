@@ -107,5 +107,5 @@ app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 app.use('/api', route_1.default); // all your loan routes go here
 // 🚀 Start server
 app.listen(8000, () => {
-    console.log('✅ Server running at http://localhost:8000');
+    console.log('✅ Server running at https://login-system-wqit.onrender.com');
 });
