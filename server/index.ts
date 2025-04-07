@@ -25,8 +25,6 @@ app.use(cors({
   credentials: true, // <== very important
 }));
 
-// 💡 Handle Preflight requests
-app.options('*', cors());
 
 // 🔐 Auth Middleware
 const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
