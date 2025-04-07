@@ -36,7 +36,7 @@ const AdminList = () => {
   }, []);
 
   const handleDeleteAdmin = async (adminId: string) => {
-    const currentUserId = 'current-user-id'; // Replace with actual ID
+    const currentUserId = 'current-user-id';
     if (adminId === currentUserId) {
       setError('Khud ko delete nahi kar sakta');
       return;
@@ -58,12 +58,12 @@ const AdminList = () => {
 
   return (
     <div className="ml-64 p-6">
-      <h2 className="text-2xl mb-4">Saare Admins</h2>
+      <h2 className="text-2xl mb-4">Admins</h2>
       <button
         className="mb-4 bg-blue-500 text-white px-4 py-2"
         onClick={() => navigate('/dashboard')}
       >
-        Wapas Dashboard
+        Dashboard
       </button>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       {admins.length > 0 ? (

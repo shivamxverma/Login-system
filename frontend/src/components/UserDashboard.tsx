@@ -29,7 +29,7 @@ const UserDashboard = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          credentials: 'include', // For session-based auth
+          credentials: 'include',
         });
 
         const res : any = await response.json();

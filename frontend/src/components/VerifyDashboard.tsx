@@ -60,7 +60,7 @@ const VerifierDashboard: React.FC<VerifierDashboardProps> = () => {
   }, []);
 
   const handleVerify = async (loanId: string) => {
-    const verifierId = '0f15c658-229e-4b05-9428-fc4a4796eb98'; // Replace with actual verifier ID (e.g., from auth context)
+    const verifierId = '0f15c658-229e-4b05-9428-fc4a4796eb98'; 
     try {
       setLoans((prevLoans) =>
         prevLoans.map((loan) =>

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { z } from "zod";
 
-// Zod validation schema
 const formSchema = z.object({
   Name: z.string().min(1, "Name is required"),
   Tenure: z.string().min(1, "Tenure is required"),

@@ -62,7 +62,7 @@ const AdminDashboard = () => {
   }, []);
 
   const handleApprove = async (loanId: string) => {
-    const adminId = 'cdb750db-0add-4b54-80ca-73349fe27b2c'; // Replace with actual admin ID
+    const adminId = 'cdb750db-0add-4b54-80ca-73349fe27b2c';
     try {
       setLoans((prevLoans) =>
         prevLoans.map((loan) =>
@@ -206,7 +206,7 @@ const AdminDashboard = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={4} className="p-2 text-center">Koi loan nahi mila</td>
+                <td colSpan={4} className="p-2 text-center">No Loan is found</td>
               </tr>
             )}
           </tbody>
@@ -218,7 +218,6 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Show All Admins Button */}
       <button
         className="mt-4 bg-blue-500 text-white px-4 py-2"
         onClick={() => navigate('/admins')}

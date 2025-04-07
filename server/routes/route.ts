@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/loan', async (req: any, res: any) => {
   try {
     const {
-      fullName, // Changed to match frontend
+      fullName,
       amount,
       // loanTenure,
       reason,
@@ -89,7 +89,7 @@ router.put('/loan/verify/:loanId', async (req: Request, res: Response) => {
 
 router.delete('/loan/reject/:loanId', async (req: Request, res: Response) => {
   const { loanId } = req.params;
-  const { rejectedById, rejectionReason } = req.body; // Optional
+  const { rejectedById } = req.body;
 
   try {
     await prisma.loan.update({
@@ -97,7 +97,6 @@ router.delete('/loan/reject/:loanId', async (req: Request, res: Response) => {
       data: {
         status: 'REJECTED',
         rejectedById: rejectedById || null,
-        rejectionReason: rejectionReason || 'No reason provided',
       },
     });
 

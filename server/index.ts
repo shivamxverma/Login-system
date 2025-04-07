@@ -13,20 +13,17 @@ const app = express();
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "SHIVAM12@#";
 
-// 🔐 Middleware
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ CORS FIX
 app.use(cors({
-  origin: "https://login-system-eosin.vercel.app",  // your frontend URL
+  origin: "https://login-system-eosin.vercel.app",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true, // <== very important
+  credentials: true,
 }));
 
 
-// 🔐 Auth Middleware
 const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -37,7 +34,6 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     (req as any).user = decoded;
 
-    // 🍪 Set Cookie with userId
     res.cookie("userId", (decoded as any).userId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -75,7 +71,6 @@ app.post('/signup', async (req : any, res : any) => {
   return res.status(200).json({ msg: "Signup Success" });
 });
 
-// 🔐 Login Route with Token + Cookie
 app.post('/login', async (req: any, res: any) => {
   const { email, password } = req.body;
 
@@ -92,7 +87,6 @@ app.post('/login', async (req: any, res: any) => {
       { expiresIn: '1h' }
     );
 
-    // Set userId cookie
     res.cookie("userId", user.id, {
       httpOnly: true,
       secure: false,
@@ -100,7 +94,6 @@ app.post('/login', async (req: any, res: any) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    // Set userRole cookie
     res.cookie("userRole", user.role, {
       httpOnly: true,
       secure: false,
@@ -120,7 +113,6 @@ app.post('/login', async (req: any, res: any) => {
   }
 });
 
-// 📦 Loan Routes
 app.use('/api', LoanRoute); 
 app.use('/users',AdminRoute);
 

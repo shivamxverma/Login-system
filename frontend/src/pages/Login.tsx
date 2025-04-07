@@ -8,7 +8,7 @@ interface LoginResponse {
   user: {
     name: string;
     email: string;
-    role: string; // "USER", "VERIFIER", "ADMIN" from Prisma schema
+    role: string; 
   };
 }
 
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Ensures cookies are sent/received
+        credentials: 'include', 
         body: JSON.stringify({ email, password }),
       });
 
@@ -40,15 +40,13 @@ const Login: React.FC = () => {
       const data: LoginResponse = await response.json();
       console.log('Login successful:', data);
 
-      // Store token in localStorage and cookies
       localStorage.setItem('token', data.token);
-      Cookies.set('token', data.token, { expires: 7 }); // 7-day expiry
-      Cookies.set('user', JSON.stringify(data.user), { expires: 7 }); // Store user object
+      Cookies.set('token', data.token, { expires: 7 });
+      Cookies.set('user', JSON.stringify(data.user), { expires: 7 });
 
       const userRole = data.user.role.toLowerCase();
       console.log('User role set to:', userRole);
 
-      // Navigate to dashboard with role in state
       navigate('/dashboard', { state: { role: userRole } });
     } catch (err: any) {
       console.error('Login error:', err);

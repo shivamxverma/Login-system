@@ -21,7 +21,7 @@ router.get('/admins', async (req: Request, res: Response) => {
 
 router.delete('/:id', async (req: any, res: any) => {
     const { id } = req.params;
-    const currentUserId = req.user?.id || 'current-user-id'; // Replace with actual auth logic
+    const currentUserId = req.user?.id || 'current-user-id';
   
     if (id === currentUserId) {
       return res.status(400).json({ error: 'You cannot delete yourself' });

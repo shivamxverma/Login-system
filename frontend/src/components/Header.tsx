@@ -6,23 +6,19 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear all relevant cookies
     Cookies.remove('token');
     Cookies.remove('user');
-    Cookies.remove('userId'); // If set by backend
-    Cookies.remove('userRole'); // If set by backend
+    Cookies.remove('userId'); 
+    Cookies.remove('userRole'); 
 
-    // Clear localStorage (if token is stored there)
     localStorage.removeItem('token');
 
-    // Navigate to login page
     navigate('/login');
   };
 
-  // Determine the role display based on the 'user' cookie
   const userCookie = Cookies.get('user');
   const user = userCookie ? JSON.parse(userCookie) : null;
-  const role = user?.role ? user.role.toLowerCase() : 'user'; // Default to 'user' if no role
+  const role = user?.role ? user.role.toLowerCase() : 'user'; 
 
   return (
     <header className="bg-gray-100 p-4 flex justify-between items-center">
