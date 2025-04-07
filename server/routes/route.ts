@@ -1,44 +1,67 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.post('/loan', async (req : any, res : any) => {
-    try {
-      const {
-        Name,
-        Amount,
-        // Tenure,
-        Reason,
-        // EmploymentStatus,
-        // EmploymentAddress,
-        userId
-      } = req.body;
+router.post('/loan', async (req: any, res: any) => {
+  try {
+    const {
+      fullName, // Changed to match frontend
+      amount,
+      // loanTenure,
+      reason,
+      // employmentStatus,
+      // employmentAddress,
+      userId,
+    } = req.body;
 
-      console.log(req.body);
-  
-      const newLoan = await prisma.loan.create({
-        data: {
-          customerName: Name,
-          amount: parseFloat(Amount),
-          reason: Reason,
-          userId,
-        }
-      });
-
-      console.log("New loan is Created");
-      console.log(newLoan);
-  
-      res.status(201).json({ message: 'Loan request submitted successfully', loan: newLoan });
-  
-    } catch (error) {
-      console.error("Loan creation error:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+    if (!fullName || !amount || !reason || !userId) {
+      return res.status(400).json({ error: 'Missing required fields' });
     }
+
+    const newLoan = await prisma.loan.create({
+      data: {
+        customerName: String(fullName), 
+        amount: parseFloat(amount),
+        reason: String(reason),
+        userId: String(userId),
+      },
+    });
+
+    console.log('New loan is Created');
+    console.log(newLoan);
+
+    res.status(201).json({ message: 'Loan request submitted successfully', loan: newLoan });
+  } catch (error) {
+    console.error('Loan creation error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
-router.put('/loan/verify/:loanId', async (req, res) => {
+router.get('/loan', async (req: Request, res: Response) => {
+  try {
+      const allLoans = await prisma.loan.findMany();
+
+      console.log('Fetched loans:', allLoans);
+      console.log('Inside loan route');
+
+      res.status(200).json({
+          success: true, 
+          message: 'All loans fetched successfully',
+          data: allLoans, 
+      });
+  } catch (error) {
+      console.error("Loan fetching error:", error instanceof Error ? error.message : error);
+      res.status(500).json({
+          success: false,
+          error: "Internal Server Error",
+      });
+  }
+});
+
+router.put('/loan/verify/:loanId', async (req: Request, res: Response) => {
   const { loanId } = req.params;
   const { verifierId } = req.body;
 
@@ -64,24 +87,38 @@ router.put('/loan/verify/:loanId', async (req, res) => {
   }
 });
 
-router.delete('/loan/reject/:loanId', async (req, res) => {
+router.delete('/loan/reject/:loanId', async (req: Request, res: Response) => {
   const { loanId } = req.params;
+  const { rejectedById, rejectionReason } = req.body; // Optional
 
   try {
+    await prisma.loan.update({
+      where: { id: loanId },
+      data: {
+        status: 'REJECTED',
+        rejectedById: rejectedById || null,
+        rejectionReason: rejectionReason || 'No reason provided',
+      },
+    });
+
     await prisma.loan.delete({
       where: { id: loanId },
     });
 
     res.json({ message: 'Loan rejected and deleted' });
   } catch (error) {
-    console.error("Reject Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Reject Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-router.put('/loan/approve/:loanId', async (req : any, res : any) => {
+router.put('/loan/approve/:loanId', async (req: any, res: any) => {
   const { loanId } = req.params;
   const { adminId } = req.body;
+
+  if (!adminId) {
+    return res.status(400).json({ error: 'Admin ID is required' });
+  }
 
   try {
     const loan = await prisma.loan.findUnique({
@@ -89,7 +126,7 @@ router.put('/loan/approve/:loanId', async (req : any, res : any) => {
     });
 
     if (!loan || loan.status !== 'VERIFIED') {
-      return res.status(400).json({ error: "Loan must be verified before approval" });
+      return res.status(400).json({ error: 'Loan must be verified before approval' });
     }
 
     const updatedLoan = await prisma.loan.update({
@@ -102,12 +139,12 @@ router.put('/loan/approve/:loanId', async (req : any, res : any) => {
 
     res.json({ message: 'Loan approved successfully', loan: updatedLoan });
   } catch (error) {
-    console.error("Approval Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Approval Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-router.get('/loan/verified', async (req, res) => {
+router.get('/loan/verified', async (req: Request, res: Response) => {
   try {
     const loans = await prisma.loan.findMany({
       where: { status: 'VERIFIED' },

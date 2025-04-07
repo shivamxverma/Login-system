@@ -1,78 +1,91 @@
-import cors from 'cors';
 import express, { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
+import cors from 'cors';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import LoanRoute from './routes/route'; 
-
+import cookieParser from 'cookie-parser';
+import LoanRoute from './routes/route';
+import AdminRoute from './routes/admin';
 
 dotenv.config();
-const prisma = new PrismaClient();
 const app = express();
-
+const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "SHIVAM12@#";
 
+// 🔐 Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
 
+// ✅ CORS FIX
+app.use(cors({
+  origin: "http://localhost:5173",  // your frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true, // <== very important
+}));
 
+// 💡 Handle Preflight requests
+app.options('*', cors());
+
+// 🔐 Auth Middleware
 const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) return res.status(401).json({ error: 'Access Denied. No token provided.' });
 
-  console.log(token);
-
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     (req as any).user = decoded;
+
+    // 🍪 Set Cookie with userId
+    res.cookie("userId", (decoded as any).userId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
     next();
   } catch (err) {
     return res.status(403).json({ error: 'Invalid or expired token.' });
   }
 };
 
-app.post('/signup', async (req: any, res: any) => {
-    const { name, email, password, role } = req.body;
+app.post('/signup', async (req : any, res : any) => {
+  const { name, email, password, role } = req.body;
 
-    console.log(req.body);
-    
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
-      return res.status(409).json({ error: "User already exists" });
-    }
-    
-    const hashedPassword = await bcrypt.hash(password, 10);
-    
-    const newUser = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        role: role as any, 
-      },
-    });
-    return res.status(200).json({
-      msg: "Signup Success",
-    }); 
+  const uppercaseRole = role.toUpperCase();
+
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+  if (existingUser) {
+    return res.status(409).json({ error: "User already exists" });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await prisma.user.create({
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+      role: uppercaseRole,
+    },
+  });
+
+  return res.status(200).json({ msg: "Signup Success" });
 });
 
+// 🔐 Login Route with Token + Cookie
 app.post('/login', async (req: any, res: any) => {
   const { email, password } = req.body;
 
   try {
     const user = await prisma.user.findUnique({ where: { email } });
 
-    if (!user) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: "Invalid credentials" });
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
-    if (!passwordMatch) {
-      return res.status(401).json({ error: "Invalid Password" });
     }
 
     const token = jwt.sign(
@@ -81,19 +94,39 @@ app.post('/login', async (req: any, res: any) => {
       { expiresIn: '1h' }
     );
 
+    // Set userId cookie
+    res.cookie("userId", user.id, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    // Set userRole cookie
+    res.cookie("userRole", user.role, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
     return res.status(200).json({
       msg: "Login Success",
       token,
       user: { name: user.name, email: user.email, role: user.role },
     });
+
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-app.use('/api', LoanRoute);
+// 📦 Loan Routes
+app.use('/api', LoanRoute); 
+app.use('/users',AdminRoute);
 
+// 🚀 Start server
 app.listen(8000, () => {
-  console.log('Server running on http://localhost:8000');
+  console.log('✅ Server running at http://localhost:8000');
 });
