@@ -126,7 +126,9 @@ app.post('/login', async (req: any, res: any) => {
 app.use('/api', LoanRoute); 
 app.use('/users',AdminRoute);
 
-// 🚀 Start server
-app.listen(8000, () => {
-  console.log('✅ Server running at http://localhost:8000');
+const port = process.env.PORT || 5000 ;
+app.listen(port, () => {
+  console.log('✅ Server running at https://login-system-wqit.onrender.com');
 });
+
+
