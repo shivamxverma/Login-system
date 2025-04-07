@@ -65,7 +65,7 @@ This is a role-based loan application system where users can submit loan applica
 
 ### Prerequisites
 - Node.js (v16 or higher)
-- MongoDB (local or cloud like MongoDB Atlas)
+- Postgres 
 - Git (for cloning the repo)
 
 ### Steps
@@ -84,19 +84,19 @@ This is a role-based loan application system where users can submit loan applica
    Create a `.env` file in the root directory with:
    ```
    PORT=3000
-   MONGO_URI=<your-mongodb-connection-string>
+   DATABASE_URL=<your-postgres-connection-string>
    JWT_SECRET=<your-secret-key>
    ```
 
-4. **Run MongoDB**:
-   - If local: Start MongoDB with `mongod`.
-   - If cloud: Ensure your MongoDB Atlas URI is correct.
+4. **Run postgres**:
+   - If local: Start postgres with `postgres`.
+   - If cloud: Used Neon Db for that
 
 5. **Start the Server**:
    ```bash
    npm start
    ```
-   The server will run on `http://localhost:3000`.
+   The server will run on `http://localhost8000`.
 
 ---
 
@@ -110,7 +110,7 @@ This is a role-based loan application system where users can submit loan applica
    - Example form data:
      ```json
      {
-       "name": "John Doe",
+       "name": "Shivam Verma",
        "tenure": "12",
        "reason": "Medical expenses",
        "amount": "5000",
@@ -131,12 +131,12 @@ This is a role-based loan application system where users can submit loan applica
 
 ## API Endpoints
 ### Authentication
-- `POST /api/auth/register`: Register a new user (name, email, password, role).
-- `POST /api/auth/login`: Login and receive a JWT token.
+- `POST /signup`: Register a new user (name, email, password, role).
+- `POST /login`: Login and receive a JWT token.
 
 ### Loan Application
 - `POST /api/loan/apply`: Submit a new loan application (user only).
-- `GET /api/loan/status/:id`: Check application status (user only).
+- `GET /api/loan/:id`: Check application status (user only).
 - `PUT /api/loan/verify/:id`: Verify or reject a loan (verifier only).
 - `PUT /api/loan/approve/:id`: Approve or reject a loan (admin only).
 
