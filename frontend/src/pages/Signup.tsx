@@ -51,12 +51,15 @@ function Login() {
     }
 
     try {
-      await axios.post("http://localhost:8000/signup", {
+      const data = await axios.post("http://localhost:8000/signup", {
         name,
         email,
         password,
         role,
       });
+
+      console.log(data);
+
       navigate("/dashboard");
     } catch (error) {
       console.error("Signup failed:", error);
@@ -70,9 +73,9 @@ function Login() {
       <label>Select Role:</label>
       <select value={role} onChange={(e) => setRole(e.target.value)}>
         <option value="">Select role</option>
-        <option value="admin">Admin</option>
-        <option value="user">User</option>
-        <option value="guest">Verifier</option>
+        <option value="admin">ADMIN</option>
+        <option value="user">USER</option>
+        <option value="guest">VERIFIER</option>
       </select>
       {errors.role && <p style={{ color: "red" }}>{errors.role}</p>}
       <br />
