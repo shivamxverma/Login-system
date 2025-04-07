@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface Stat {
@@ -62,7 +62,7 @@ const AdminDashboard = () => {
   }, []);
 
   const handleApprove = async (loanId: string) => {
-    const adminId = 'some-admin-id'; // Replace with actual admin ID
+    const adminId = 'cdb750db-0add-4b54-80ca-73349fe27b2c'; // Replace with actual admin ID
     try {
       setLoans((prevLoans) =>
         prevLoans.map((loan) =>
@@ -165,7 +165,7 @@ const AdminDashboard = () => {
               loans.map((loan) => (
                 <tr key={loan.id} className="border-t">
                   <td className="p-2 border">
-                    <div>{loan.user.email || 'Email nahi hai'}</div>
+                    {/* <div>{loan.user.email || 'Email nahi hai'}</div> */}
                     <div className="text-sm">Updated: {new Date(loan.updatedAt).toLocaleString()}</div>
                   </td>
                   <td className="p-2 border">{loan.customerName}</td>

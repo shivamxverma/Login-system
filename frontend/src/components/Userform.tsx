@@ -43,7 +43,7 @@ function UserForm() {
     }
 
     try {
-      const response = await axios.post("http://localhost:8000/apply-loan", form);
+      await axios.post("http://localhost:8000/api/loan", form);
       setSuccess(true);
       setForm({
         Name: "",

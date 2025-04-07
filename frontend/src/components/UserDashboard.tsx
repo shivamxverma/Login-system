@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
-import LoanTable from './Loantable';
+import  { useState, useEffect } from 'react';
 import ApplyPage from './ApplyPage';
 
 const UserDashboard = () => {

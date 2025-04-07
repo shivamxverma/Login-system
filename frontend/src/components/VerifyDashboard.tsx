@@ -24,7 +24,7 @@ interface Loan {
 interface VerifierDashboardProps {}
 
 const VerifierDashboard: React.FC<VerifierDashboardProps> = () => {
-  const [stats, setStats] = useState<Stat[]>([]);
+  const [stats, _] = useState<Stat[]>([]);
   const [loans, setLoans] = useState<Loan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

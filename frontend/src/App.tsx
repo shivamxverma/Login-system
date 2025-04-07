@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import NavBar from './components/Navbar';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -33,9 +32,6 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admins" element={<Admin />} />
-          {/* Add more protected routes here as needed */}
-          {/* Example: */}
-          {/* <Route path="/loanform" element={<LoanForm />} /> */}
         </Route>
 
         {/* Catch-all route to redirect unauthorized users */}
